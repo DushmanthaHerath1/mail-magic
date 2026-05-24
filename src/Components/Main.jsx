@@ -1,7 +1,26 @@
+import { useState } from "react";
+
 function Main() {
+  const [isLoading, setIsloading] = useState(false);
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const data = Object.fromEntries(formData);
+    console.log("Form Data Submitted", data);
+
+    setIsloading(true);
+
+    setTimeout(() => {
+      console.log("AI Response arrived");
+      setIsloading(false);
+    }, 3000);
+  };
   return (
-    <div className="p-8 mt-4 w-full max-w-6xl flex flex-col gap-4">
-      <form>
+    <div className="p-8 mt-4 w-full flex flex-col items-center">
+      <form
+        className="w-full sm:max-w-lg md:max-w-2xl items-center gap-4"
+        onSubmit={handleSubmit}
+      >
         <div className="flex flex-col gap-1.5 mb-4">
           <label
             htmlFor="recipient"
@@ -10,8 +29,9 @@ function Main() {
             Recipient Name
           </label>
           <input
-            type="email"
-            id="recipient"
+            type="text"
+            name="recipientName"
+            id="recipientName"
             placeholder="eg: Boss, (Name)"
             className="w-full px-4 py-2.5 bg-white border border-zinc-300 rounded-lg text-zinc-900 text-sm placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:border-transparent transition-all duration-200 shadow-sm"
           />
@@ -26,7 +46,8 @@ function Main() {
           </label>
           <input
             type="email"
-            id="recipient"
+            name="recipientEmail"
+            id="recipientEmail"
             placeholder="boss@company.com"
             className="w-full px-4 py-2.5 bg-white border border-zinc-300 rounded-lg text-zinc-900 text-sm placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:border-transparent transition-all duration-200 shadow-sm"
           />
@@ -41,6 +62,7 @@ function Main() {
           </label>
           <select
             id="emailTone"
+            name="tone"
             defaultValue=""
             className="w-full px-4 py-2.5 bg-white border border-zinc-300 rounded-lg text-zinc-900 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:border-transparent transition-all duration-200 shadow-sm cursor-pointer"
           >
@@ -62,6 +84,7 @@ function Main() {
           </label>
           <textarea
             id="message"
+            name="emailBody"
             rows="5"
             placeholder="Write your email here..."
             className="w-full px-4 py-3 bg-white border border-zinc-300 rounded-lg text-zinc-900 text-sm placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:border-transparent transition-all duration-200 shadow-sm resize-y"
@@ -70,10 +93,11 @@ function Main() {
 
         <div className="mt-4 flex justify-end mb-4">
           <button
-            type="button"
-            className="px-6 py-2.5 bg-zinc-900 text-white font-semibold text-sm rounded-lg hover:bg-zinc-800 transition-colors shadow-md"
+            type="submit"
+            className="px-6 py-2.5 bg-zinc-900 text-white font-semibold text-sm rounded-lg hover:bg-zinc-800 transition-colors shadow-md disabled:opacity-50"
+            disabled={isLoading}
           >
-            Generate Email
+            {isLoading ? "Generating Magic..." : "Generate Email"}
           </button>
         </div>
       </form>

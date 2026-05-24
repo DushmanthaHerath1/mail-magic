@@ -4,7 +4,7 @@ import Nav from "./Components/Nav";
 
 function App() {
   return (
-    <div className="h-screen lex items-center justify-center bg-gray-100">
+    <div className="h-full flex flex-col items-center justify-center bg-gray-100">
       <Nav />
       <Header />
       <Main />
