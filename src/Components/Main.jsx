@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { generateMagicEmail } from "../ai";
+import ReactMarkdown from "react-markdown";
 
 function Main() {
   const [isLoading, setIsloading] = useState(false);
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const data = Object.fromEntries(formData);
@@ -10,11 +12,17 @@ function Main() {
 
     setIsloading(true);
 
-    setTimeout(() => {
-      console.log("AI Response arrived");
+    try {
+      const aiResponse = await generateMagicEmail(data);
+      setGeneratedEmail(aiResponse);
+    } catch (err) {
+      console.error(err);
+    } finally {
       setIsloading(false);
-    }, 3000);
+    }
   };
+  const [generatedEmail, setGeneratedEmail] = useState("");
+
   return (
     <div className="p-8 mt-4 w-full flex flex-col items-center">
       <form
@@ -101,6 +109,14 @@ function Main() {
           </button>
         </div>
       </form>
+
+      {generatedEmail !== "" && (
+        <section className="bg-white p-6 rounded-lg shadow-md w-full">
+          <div className="prose max-w-none">
+            <ReactMarkdown>{generatedEmail}</ReactMarkdown>
+          </div>
+        </section>
+      )}
     </div>
   );
 }
