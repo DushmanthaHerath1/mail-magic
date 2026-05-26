@@ -22,6 +22,18 @@ function Main() {
     }
   };
   const [generatedEmail, setGeneratedEmail] = useState("");
+  const [isCopied, setIsCopied] = useState(false);
+
+  const handleCopy = () => {
+    if (!generatedEmail) return;
+
+    navigator.clipboard.writeText(generatedEmail);
+    setIsCopied(true);
+
+    setTimeout(() => {
+      setIsCopied(true);
+    }, 2000);
+  };
 
   return (
     <div className="p-8 mt-4 w-full flex flex-col items-center">
@@ -117,6 +129,14 @@ function Main() {
           </div>
         </section>
       )}
+      <div className="flex just-end mb-4">
+        <button
+          onClick={handleCopy}
+          className="px-4 py-2 bg-zinc-200 text-zinc-800 font-semibold text-sm rounded-md hover:bg-zinc-300 transition-colors flex items-center gap-2"
+        >
+          {isCopied ? "Copied!" : "Copy to Clipboard"}
+        </button>
+      </div>
     </div>
   );
 }
