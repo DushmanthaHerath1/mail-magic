@@ -16,9 +16,7 @@ Return only the email content with a Subject line in Markdown.
 
   try {
     const response = await hf.chatCompletion({
-      // model: "XiaomiMiMo/MiMo-V2-Flash",
-      // model: "deepseek-ai/DeepSeek-V4-Pro",
-      model: "deepseek-ai/DeepSeek-V4-Flash",
+      model: "your-ai-model",
       messages: [
         { role: "system", content: systemPrompt },
         { role: "user", content: "Write the email now." },
