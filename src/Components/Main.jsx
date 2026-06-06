@@ -1,6 +1,15 @@
 import { useState } from "react";
+
 import { generateMagicEmail } from "../ai";
+
 import ReactMarkdown from "react-markdown";
+import { Clipboard, Check } from "lucide-react";
+import remarkBreaks from "remark-breaks";
+
+import ButtonPrimary from "../assets/ButtonPrimary";
+import TextField from "../assets/TextField";
+import SelectionMenu from "../assets/SelectionMenu";
+import TextArea from "../assets/TextArea";
 
 function Main() {
   const [isLoading, setIsLoading] = useState(false);
@@ -29,6 +38,12 @@ function Main() {
     setTimeout(() => setIsCopied(false), 2000);
   };
 
+  const toneOptions = [
+    { value: "professional", label: "Professional (Boss/Lecturer)" },
+    { value: "casual", label: "Casual (Colleague)" },
+    { value: "urgent", label: "Urgent (Action Required)" },
+  ];
+
   return (
     <div className="w-full flex flex-col items-center px-6 py-10">
       {/* Page header */}
@@ -46,93 +61,50 @@ function Main() {
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           {/* Name + Email row */}
           <div className="grid grid-cols-2 gap-3">
-            <div className="flex flex-col gap-1.5">
-              <label
-                htmlFor="recipientName"
-                className="text-xs font-medium text-zinc-700"
-              >
-                Recipient name
-              </label>
-              <input
-                type="text"
-                name="recipientName"
-                id="recipientName"
-                placeholder="e.g. Boss, Sarah"
-                className="w-full px-3 py-2 bg-zinc-50 border border-zinc-200 rounded-lg text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:border-transparent transition-all"
-              />
-            </div>
-            <div className="flex flex-col gap-1.5">
-              <label
-                htmlFor="recipientEmail"
-                className="text-xs font-medium text-zinc-700"
-              >
-                Recipient email
-              </label>
-              <input
-                type="email"
-                name="recipientEmail"
-                id="recipientEmail"
-                placeholder="boss@company.com"
-                className="w-full px-3 py-2 bg-zinc-50 border border-zinc-200 rounded-lg text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:border-transparent transition-all"
-              />
-            </div>
+            <TextField
+              htmlFor="recipientName"
+              lableName="Recipient name"
+              type="text"
+              name="recipientName"
+              id="recipientName"
+              placeholder="e.g. Boss, Sarah"
+            />
           </div>
 
           {/* Tone */}
-          <div className="flex flex-col gap-1.5">
-            <label
-              htmlFor="emailTone"
-              className="text-xs font-medium text-zinc-700"
-            >
-              Email tone
-            </label>
-            <select
-              id="emailTone"
-              name="tone"
-              defaultValue=""
-              className="w-full px-3 py-2 bg-zinc-50 border border-zinc-200 rounded-lg text-sm text-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:border-transparent transition-all cursor-pointer"
-            >
-              <option value="" disabled>
-                Select a tone...
-              </option>
-              <option value="professional">Professional (Boss/Lecturer)</option>
-              <option value="casual">Casual (Colleague)</option>
-              <option value="urgent">Urgent (Action Required)</option>
-            </select>
-          </div>
+          <SelectionMenu
+            label="Email Tone"
+            id="emailtone"
+            name="Select a tone..."
+            options={toneOptions}
+          />
 
           {/* Divider */}
           <div className="border-t border-zinc-100" />
 
           {/* Message body */}
-          <div className="flex flex-col gap-1.5">
-            <label
-              htmlFor="message"
-              className="text-xs font-medium text-zinc-700"
-            >
-              Message body
-            </label>
-            <textarea
-              id="message"
-              name="emailBody"
-              rows="5"
-              placeholder="Write your email here..."
-              className="w-full px-3 py-2.5 bg-zinc-50 border border-zinc-200 rounded-lg text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:border-transparent transition-all resize-y"
-            />
-          </div>
+          <TextArea
+            htmlFor="message"
+            id="message"
+            name="emailBody"
+            rows="5"
+            placeholder="Write your email here..."
+            label="Message Body"
+          />
 
           {/* Footer */}
           <div className="flex items-center justify-between pt-1">
             <span className="text-xs text-zinc-400">
               Keep it concise for best results
             </span>
-            <button
+
+            <ButtonPrimary
               type="submit"
               disabled={isLoading}
-              className="flex items-center gap-2 px-5 py-2 bg-zinc-900 text-white text-sm font-medium rounded-lg hover:bg-zinc-800 disabled:opacity-50 transition-colors"
+              className="flex items-center gap-2 px-5 py-2 rounded-lg"
             >
-              {isLoading ? "Generating..." : "Generate email"}
-            </button>
+              {isLoading ? "Generating..." : "Generate Email"}
+            </ButtonPrimary>
           </div>
         </form>
       </div>
@@ -148,11 +120,22 @@ function Main() {
               onClick={handleCopy}
               className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-zinc-500 border border-zinc-200 rounded-md hover:bg-zinc-50 hover:text-zinc-800 transition-colors"
             >
-              {isCopied ? "Copied!" : "Copy"}
+              {isCopied ? (
+                <div className="flex flex-row items-center gap-2">
+                  <Check size={15} /> Copied!
+                </div>
+              ) : (
+                <div className="flex flex-row items-center gap-2">
+                  <Clipboard size={15} />
+                  Copy
+                </div>
+              )}
             </button>
           </div>
           <div className="px-5 py-4 prose prose-sm max-w-none text-zinc-700">
-            <ReactMarkdown>{generatedEmail}</ReactMarkdown>
+            <ReactMarkdown remarkPlugins={[remarkBreaks]}>
+              {generatedEmail}
+            </ReactMarkdown>
           </div>
         </div>
       )}

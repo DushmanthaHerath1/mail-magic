@@ -1,3 +1,6 @@
+import ButtonPrimary from "../assets/ButtonPrimary";
+import ButtonSecondary from "../assets/ButtonSecondary";
+
 function Nav() {
   return (
     <nav className="w-full h-[60px] px-6 bg-white border-b border-zinc-200/70 flex items-center justify-center">
@@ -9,12 +12,10 @@ function Nav() {
         </div>
 
         <div className="flex items-center gap-2">
-          <button className="px-3 py-1.5 text-sm font-medium text-zinc-500 rounded-md hover:bg-zinc-100 hover:text-zinc-900 transition-colors">
-            Sign up
-          </button>
-          <button className="px-4 py-1.5 bg-zinc-900 text-white text-sm font-medium rounded-md hover:opacity-85 transition-opacity">
+          <ButtonSecondary>Signup</ButtonSecondary>
+          <ButtonPrimary className="px-4 py-1.5 rounded-md">
             Login
-          </button>
+          </ButtonPrimary>
         </div>
       </div>
     </nav>
